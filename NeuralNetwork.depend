@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1462475152 source:c:\users\asus-pc\cpp-neuralnetworkclass\net\neuralnetwork\neuralnetwork.cpp
+	<iostream>
+	"NeuralNetwork.h"
+
+1462475166 c:\users\asus-pc\cpp-neuralnetworkclass\net\neuralnetwork\neuralnetwork.h
+
+1462475050 source:c:\users\asus-pc\cpp-neuralnetworkclass\neuralnetwork.cpp
+	<iostream>
+	"NeuralNetwork.h"
+
+1462475031 c:\users\asus-pc\cpp-neuralnetworkclass\neuralnetwork.h
+
