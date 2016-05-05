@@ -15,6 +15,8 @@ class Neuron {
         Neuron(float value, int comp, int pos, float mistake, std::vector<int> inc, std::vector<int> outc);
         virtual ~Neuron();
 
+        //get_string();  // Returns the string with all neuron's values, so it can be saved to file;
+
     protected:
     private:
 };

@@ -3,6 +3,7 @@
 #include "NeuralNetwork.h"
 using namespace std;
 
+
 /* Neuron */
 Neuron::Neuron(float value, int comp, int pos, float mistake, vector<int> inc, vector<int> outc) {
     Neuron::value = value;
@@ -16,6 +17,8 @@ Neuron::Neuron(float value, int comp, int pos, float mistake, vector<int> inc, v
 Neuron::~Neuron() {
     //dtor
 }
+
+
 
 
 /* Neural Network */
