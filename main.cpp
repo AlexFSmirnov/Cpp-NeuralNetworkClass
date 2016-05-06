@@ -1,13 +1,15 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
 #include <cstdlib>
+
 #include "NeuralNetwork.h"
 
 using namespace std;
 
 /* cout << Neuron */
-ostream& operator<<(ostream& os, Neuron *n) {
+ostream& operator<<(ostream& os, Neural::Neuron *n) {
     os << "Value: " << n->value << "\n";
     os << "Component: " << n->comp << "\n";
     os << "Position: " << n->pos << "\n";
@@ -24,10 +26,13 @@ ostream& operator<<(ostream& os, Neuron *n) {
 int main(int argc, char *argv[]) {
     vector<int> inc;
     vector<int> outc;
-    Neuron *n = new Neuron(5.2, 1, 2, 1.3, inc, outc);
+    Neural::Neuron* n = new Neural::Neuron(5.2, 1, 2, 1.3, inc, outc);
     for (int i = 0; i < 8; i++) n->inc.push_back(i);
     for (int i = 0; i < 12; i++) n->outc.push_back(i);
-    cout << n;
+    cout << n << "\n";
+    //n->print_to_file();
+    Neural::Neuron* n2 = new Neural::Neuron();
+    cout << n2 << endl;
 
 
     return 0;
