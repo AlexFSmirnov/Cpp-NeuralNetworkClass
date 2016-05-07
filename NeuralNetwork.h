@@ -1,4 +1,5 @@
 #include <vector>
+#include <string>
 
 
 #ifndef NEURALNETWORK_H
@@ -9,17 +10,18 @@ namespace Neural
     class Neuron
     {
         public:
+            Neuron(int comp_, int pos_);  // Creating with values
+            Neuron(std::string filename);  // Reading from file
+            virtual ~Neuron();
+
             int comp, pos;
             float value, mistake;
             std::vector<int> inc;
             std::vector<int> outc;
 
-            Neuron(float value, int comp, int pos, float mistake, std::vector<int> inc, std::vector<int> outc);
-            Neuron();
-            virtual ~Neuron();
 
-            void print_to_file();
-            void get_from_file();
+            std::string neuron_to_string();
+            void string_to_neuron(std::string line);
 
         protected:
         private:
@@ -28,8 +30,18 @@ namespace Neural
     class Network
     {
         public:
-            Network();
+            Network(std::string tplate_="0", int syn_prc=100, float co=0.7, int nmin=0, int nmax=0);
             virtual ~Network();
+
+            typedef std::vector<std::vector<std::vector<int>>> w_matrix;
+            typedef std::vector<std::vector<Neuron*>> n_matrix;
+
+            std::vector<int> tplate;
+            int syn_prc, nmin, nmax;
+            float co;
+            w_matrix matrix;
+            n_matrix neurons;
+
         protected:
         private:
     };
