@@ -11,7 +11,7 @@ namespace Neural
     {
         public:
             Neuron(int comp_, int pos_);  // Creating with values
-            Neuron(std::string filename);  // Reading from file
+            Neuron(std::string line);  // Reading from file
             virtual ~Neuron();
 
             int comp, pos;
@@ -33,6 +33,13 @@ namespace Neural
             Network(std::string tplate_="0", int syn_prc=100, float co=0.7, int nmin=0, int nmax=0);
             virtual ~Network();
 
+            void create_synapse(int comp, int from, int to, float weight);
+
+            float get_weight(int comp, int from, int to);
+            Neuron* get_neuron(int comp, int pos);
+
+        protected:
+        private:
             typedef std::vector<std::vector<std::vector<int>>> w_matrix;
             typedef std::vector<std::vector<Neuron*>> n_matrix;
 
@@ -41,9 +48,6 @@ namespace Neural
             float co;
             w_matrix matrix;
             n_matrix neurons;
-
-        protected:
-        private:
     };
 }
 

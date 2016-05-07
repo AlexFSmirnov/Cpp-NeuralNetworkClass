@@ -23,14 +23,16 @@ ostream& operator<<(ostream& os, Neural::Neuron *n) {
 
 
 int main(int argc, char *argv[]) {
-    Neural::Network* nw = new Neural::Network("1 2 1");
-    cout << nw->matrix.size() << " " << nw->matrix[1].size() << " " << nw->matrix[1][1].size() << endl;
-    cout << nw->matrix.at(1).at(1).at(0) << endl;
+    Neural::Network* nw = new Neural::Network("1 10 1");
 
-    cout << nw->neurons[1][1] << endl;
-    cout << nw->neurons[1][0] << endl;
+    int comp = 0, pos = 0;
+    while (comp != -1) {
+        cout << nw->get_neuron(comp, pos);
+        cin >> comp >> pos;
+    }
 
-    cout << nw->neurons[1][1]->neuron_to_string() << endl;
+
+    delete nw;
 
 
 
