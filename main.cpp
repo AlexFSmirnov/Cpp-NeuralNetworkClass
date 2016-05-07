@@ -31,9 +31,9 @@ ostream& operator<<(ostream& os, const vector<T> &vec) {
 
 
 int main(int argc, char *argv[]) {
-    Neural::Network* nw = new Neural::Network("2 10 10 1", 100, 0, 1);
+    Neural::Network* nw = new Neural::Network("2 10 10 1", 80, 0, 1);
 
-    nw->educate("input.txt", true, 200);
+    nw->educate("input.txt", true, 400);
 
     cout << nw->check("0 0") << endl << nw->check("0 1") << endl << nw->check("1 0") << endl << nw->check("1 1") << endl;
 

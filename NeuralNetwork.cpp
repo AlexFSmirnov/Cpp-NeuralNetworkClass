@@ -253,7 +253,7 @@ vector<double> Neural::Network::check(string inp_)
     stringstream ss(inp_);
     vector<double> inp;
     for (double n; ss >> n;) {
-        inp.push_back(n);
+        inp.push_back(Network::toRange(n));
     }
 
     /* Changing start values */
