@@ -31,43 +31,14 @@ ostream& operator<<(ostream& os, const vector<T> &vec) {
 
 
 int main(int argc, char *argv[]) {
-    Neural::Network* nw = new Neural::Network("3 10 10 4", 50, 0, 10);
+    Neural::Network* nw = new Neural::Network("2 10 10 1", 100, 0, 1);
 
-    nw->educate("input.txt");
+    nw->educate("input.txt", true, 200);
 
-
-    //cout << nw->sum(nw->get_neuron(1, 0)) << endl;
-    //cout << nw->sum(nw->get_neuron(1, 1)) << endl;
-
-
-
-
-    /*
-    fstream fin;
-    fin.open("input.txt");
-    vector<int> a;
-    //stringstream ss;
-    int line;
-    while (!fin.eof()) {
-        fin >> line;
-        cout << line << endl;
-        a.push_back(line);
-    }
-    cout << a;*/
-
-
-
-
-    int comp = 0, pos = 0;
-    while (comp != -1) {
-        cout << nw->get_neuron(comp, pos);
-        cin >> comp >> pos;
-    }
+    cout << nw->check("0 0") << endl << nw->check("0 1") << endl << nw->check("1 0") << endl << nw->check("1 1") << endl;
 
 
     delete nw;
-
-
 
     return 0;
 }

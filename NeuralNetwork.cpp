@@ -27,7 +27,7 @@ Neural::Neuron::Neuron(string line)
 
 Neural::Neuron::~Neuron()
 {
-    cerr << "Deleted neuron " + to_string(comp) + " " + to_string(pos) + "\n";
+    //cerr << "Deleted neuron " + to_string(comp) + " " + to_string(pos) + "\n";
 }
 
 string Neural::Neuron::neuron_to_string()
@@ -135,7 +135,7 @@ Neural::Network::~Network()  // Destructor
             delete Network::neurons[comp][pos];
         }
     }
-    cerr << "Deleted network!" << endl;
+    //cerr << "Deleted network!" << endl;
 }
 
 double Neural::Network::toRange(double n)  // This function puts 'n' to range from 0 to 1, so it can be used as an input for the network
@@ -249,6 +249,32 @@ void Neural::Network::educate(string filename, bool show_process, int rep)  // E
 }
 vector<double> Neural::Network::check(string inp_)
 {
+    /* Converting input variables from string to vector */
+    stringstream ss(inp_);
+    vector<double> inp;
+    for (double n; ss >> n;) {
+        inp.push_back(n);
+    }
+
+    /* Changing start values */
+    for (int pos = 0; pos < Network::tplate[0]; pos++) {
+        Network::neurons[0][pos]->value = inp[pos];
+    }
+
+    /* Counting values */
+    for (int comp = 1; comp < Network::tplate.size(); comp++) {
+        for (int pos = 0; pos < Network::tplate[comp]; pos++) {
+            Network::neurons[comp][pos]->value = Network::sig(Network::neurons[comp][pos]);
+        }
+    }
+
+    /* Returning output */
+    vector<double> out;
+    for (int pos = 0; pos < Network::tplate[Network::tplate.size() - 1]; pos++) {
+        out.push_back(Network::fromRange(Network::neurons[Network::tplate.size() - 1][pos]->value));
+    }
+    return out;
+
 }
 
 
