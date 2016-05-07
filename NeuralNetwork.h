@@ -30,13 +30,33 @@ namespace Neural
     class Network
     {
         public:
-            Network(std::string tplate_="0", int syn_prc=100, float co=0.7, int nmin=0, int nmax=0);
+            /* Construactor and destructor */
+            Network(std::string tplate_="0", int syn_prc=100, int nmin=0, int nmax=0, float co=0.7);
+            Network();
             virtual ~Network();
 
-            void create_synapse(int comp, int from, int to, float weight);
+            /* Main methods */
+            double toRange(int n);
+            double fromRange(int n);
 
+            double sum(Neuron* ne);
+            double sig(Neuron* ne);
+            double der(Neuron* ne);
+
+            void recount_mistake(Neuron* &ne);
+            void recount_edges(Neuron* ne);
+
+            void educate(std::string filename="education.txt", bool show_process=false, int rep=1);
+            std::vector<double> check(std::string inp_);
+
+            /* Misc */
+            void create_synapse(int comp, int from, int to, float weight);
             float get_weight(int comp, int from, int to);
             Neuron* get_neuron(int comp, int pos);
+            void save(std::string filename="network.net");
+            void load(std::string filename="network.net");
+
+
 
         protected:
         private:

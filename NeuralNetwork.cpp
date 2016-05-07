@@ -65,12 +65,12 @@ void Neural::Neuron::string_to_neuron(string line)
 
 
 /* Neural Network */
-Neural::Network::Network(string tplate_, int syn_prc, float co, int nmin, int nmax)
+Neural::Network::Network(string tplate_, int syn_prc, int nmin, int nmax, float co)
 {
     Network::syn_prc = syn_prc;
-    Network::co = co;
     Network::nmin = nmin;
     Network::nmax = nmax;
+    Network::co = co;
 
     srand(time(0));
     stringstream ss(tplate_);  // Converting the template from string to vector
@@ -103,8 +103,7 @@ Neural::Network::Network(string tplate_, int syn_prc, float co, int nmin, int nm
         for (int from = 0; from < tplate[comp]; from++) {  // The neuron, to which we are going to add 'neighbors' (outputs)
             for (int to = 0; to < tplate[comp + 1]; to++) {  // Cycling through 'from' neuron neighbors.
                 if (rand() % 100 < syn_prc) {  // And deciding, if we are going to create a synapse between them.
-                    Network::create_synapse(comp, from, to, (100 - rand() % 200) / 100.0);  // And creating that synapse;
-                    clog << "Added!\n";
+                    Network::create_synapse(comp, from, to, (100 - rand() % 200) / 100.0);  // And creating that synapse;";
                 }
             }
             if (Network::neurons[comp][from]->outc.size() == 0) {  // Every neuron should have at least one input and one output. Otherwise it is useless. So we are checking if we didn't add any
@@ -117,13 +116,14 @@ Neural::Network::Network(string tplate_, int syn_prc, float co, int nmin, int nm
     for (int comp = 1; comp < tplate.size(); comp++) {
         for (int to = 0; to < tplate[comp]; to++) {
             if (Network::neurons[comp][to]->inc.size() == 0) {  // If there are no inputs,
-                int from = rand() % (tplate[comp - 1]);         // Choosing the neuron from previous component
-                Network::create_synapse(comp, from, to, (100 - rand() % 200) / 100.0);  // And yeah, creating the synapse.
+                int from = rand() % tplate[comp - 1];         // Choosing the neuron from previous component
+                Network::create_synapse(comp - 1, from, to, (100 - rand() % 200) / 100.0);  // And yeah, creating the synapse.
             }
         }
     }
+}
 
-
+Neural::Network::Network() {  // Not filling anything, because we are going to load the network from file, porbably
 }
 
 Neural::Network::~Network()  // Destructor
@@ -136,10 +136,25 @@ Neural::Network::~Network()  // Destructor
     cerr << "Deleted network!" << endl;
 }
 
+double toRange(int n);
+double fromRange(int n);
+
+double sum(Neural::Neuron* ne);
+double sig(Neural::Neuron* ne);
+double der(Neural::Neuron* ne);
+
+void recount_mistake(Neural::Neuron* &ne);
+void recount_edges(Neural::Neuron* ne);
+
+void educate(string filename="education.txt", bool show_process=false, int rep=1);
+vector<double> check(string inp_);
+
+
+
 void Neural::Network::create_synapse(int comp, int from, int to, float weight) {
-    Network::neurons[comp][from]->outc.push_back(to);     // Adding output synapse to 'from' neuron
-    Network::neurons[comp + 1][to]->inc.push_back(from);  // And input synapse to 'to' neuron
-    Network::matrix[comp][from][to] = weight;  // Creating the weight of the synapse between these neurons. It should be random in range from -0.99 to +0.99
+    Network::neurons.at(comp).at(from)->outc.push_back(to);     // Adding output synapse to 'from' neuron
+    Network::neurons.at(comp + 1).at(to)->inc.push_back(from);  // And input synapse to 'to' neuron
+    Network::matrix.at(comp).at(from).at(to) = weight;  // Creating the weight of the synapse between these neurons. It should be random in range from -0.99 to +0.99
 }
 
 float Neural::Network::get_weight(int comp, int from, int to) {
@@ -149,3 +164,6 @@ float Neural::Network::get_weight(int comp, int from, int to) {
 Neural::Neuron* Neural::Network::get_neuron(int comp, int pos) {
     return Network::neurons[comp][pos];
 }
+
+void save(string filename="network.net");
+void load(string filename="network.net");

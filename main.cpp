@@ -23,7 +23,7 @@ ostream& operator<<(ostream& os, Neural::Neuron *n) {
 
 
 int main(int argc, char *argv[]) {
-    Neural::Network* nw = new Neural::Network("1 10 1");
+    Neural::Network* nw = new Neural::Network("1 10 10 1", 10);
 
     int comp = 0, pos = 0;
     while (comp != -1) {
