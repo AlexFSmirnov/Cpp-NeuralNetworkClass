@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <ctime>
+#include <math.h>
 #include "NeuralNetwork.h"
 using namespace std;
 
@@ -123,7 +124,8 @@ Neural::Network::Network(string tplate_, int syn_prc, int nmin, int nmax, float 
     }
 }
 
-Neural::Network::Network() {  // Not filling anything, because we are going to load the network from file, porbably
+Neural::Network::Network()   // Not filling anything, because we are going to load the network from file, porbably
+{
 }
 
 Neural::Network::~Network()  // Destructor
@@ -136,34 +138,69 @@ Neural::Network::~Network()  // Destructor
     cerr << "Deleted network!" << endl;
 }
 
-double toRange(int n);
-double fromRange(int n);
+double Neural::Network::toRange(float n)  // This function puts 'n' to range from 0 to 1, so it can be used as an input for the network
+{
+    return n / (Network::nmax - Network::nmin);
+}
+double Neural::Network::fromRange(float n)  // And this function gets 'n' back
+{
+    return n * (Network::nmax - Network::nmin);
+}
 
-double sum(Neural::Neuron* ne);
-double sig(Neural::Neuron* ne);
-double der(Neural::Neuron* ne);
+double Neural::Network::sum(Neural::Neuron* ne)  // Computing the weighted sum for the neuron 'ne'
+{
+    double sm = 0;
+    for (auto pos = ne->inc.begin(); pos != ne->inc.end(); pos++) {  // Cycling through incoming neurons
+        sm += Network::matrix[ne->comp - 1][*pos][ne->pos] * Network::neurons[ne->comp - 1][*pos]->value;
+    }
+    return sm;
+}
+double Neural::Network::sig(Neural::Neuron* ne)  // Sigma activator
+{
+    return (1 / (1 + exp(-(Network::sum(ne)))));
+}
+double Neural::Network::der(Neural::Neuron* ne)  // Derivative for that sigma activator
+{
+    return (Network::sig(ne)) * (1 - Network::sig(ne));
+}
 
-void recount_mistake(Neural::Neuron* &ne);
-void recount_edges(Neural::Neuron* ne);
+void Neural::Network::recount_mistake(Neural::Neuron* &ne)
+{
 
-void educate(string filename="education.txt", bool show_process=false, int rep=1);
-vector<double> check(string inp_);
+}
+void Neural::Network::recount_edges(Neural::Neuron* ne)
+{
+}
+
+void Neural::Network::educate(string filename, bool show_process, int rep)
+{
+}
+vector<double> Neural::Network::check(string inp_)
+{
+}
 
 
 
-void Neural::Network::create_synapse(int comp, int from, int to, float weight) {
+void Neural::Network::create_synapse(int comp, int from, int to, float weight)
+{
     Network::neurons.at(comp).at(from)->outc.push_back(to);     // Adding output synapse to 'from' neuron
     Network::neurons.at(comp + 1).at(to)->inc.push_back(from);  // And input synapse to 'to' neuron
     Network::matrix.at(comp).at(from).at(to) = weight;  // Creating the weight of the synapse between these neurons. It should be random in range from -0.99 to +0.99
 }
 
-float Neural::Network::get_weight(int comp, int from, int to) {
+float Neural::Network::get_weight(int comp, int from, int to)
+{
     return Network::matrix.at(comp).at(from).at(to);
 }
 
-Neural::Neuron* Neural::Network::get_neuron(int comp, int pos) {
+Neural::Neuron* Neural::Network::get_neuron(int comp, int pos)
+{
     return Network::neurons[comp][pos];
 }
 
-void save(string filename="network.net");
-void load(string filename="network.net");
+void save(string filename)
+{
+}
+void load(string filename)
+{
+}

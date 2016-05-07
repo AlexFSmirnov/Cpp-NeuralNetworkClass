@@ -36,8 +36,8 @@ namespace Neural
             virtual ~Network();
 
             /* Main methods */
-            double toRange(int n);
-            double fromRange(int n);
+            double toRange(float n);
+            double fromRange(float n);
 
             double sum(Neuron* ne);
             double sig(Neuron* ne);
@@ -46,15 +46,15 @@ namespace Neural
             void recount_mistake(Neuron* &ne);
             void recount_edges(Neuron* ne);
 
-            void educate(std::string filename="education.txt", bool show_process=false, int rep=1);
+            void educate(std::string filename, bool show_process=false, int rep=1);
             std::vector<double> check(std::string inp_);
 
             /* Misc */
             void create_synapse(int comp, int from, int to, float weight);
             float get_weight(int comp, int from, int to);
             Neuron* get_neuron(int comp, int pos);
-            void save(std::string filename="network.net");
-            void load(std::string filename="network.net");
+            void save(std::string filename);
+            void load(std::string filename);
 
 
 
