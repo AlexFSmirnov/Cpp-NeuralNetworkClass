@@ -66,7 +66,7 @@ void Neural::Neuron::string_to_neuron(string line)
 
 
 /* Neural Network */
-Neural::Network::Network(string tplate_, int syn_prc, int nmin, int nmax, float co)
+Neural::Network::Network(string tplate_, int syn_prc, int nmin, int nmax, double co)
 {
     Network::syn_prc = syn_prc;
     Network::nmin = nmin;
@@ -138,14 +138,16 @@ Neural::Network::~Network()  // Destructor
     cerr << "Deleted network!" << endl;
 }
 
-double Neural::Network::toRange(float n)  // This function puts 'n' to range from 0 to 1, so it can be used as an input for the network
+double Neural::Network::toRange(double n)  // This function puts 'n' to range from 0 to 1, so it can be used as an input for the network
 {
     return n / (Network::nmax - Network::nmin);
 }
-double Neural::Network::fromRange(float n)  // And this function gets 'n' back
+double Neural::Network::fromRange(double n)  // And this function gets 'n' back
 {
     return n * (Network::nmax - Network::nmin);
 }
+
+
 
 double Neural::Network::sum(Neural::Neuron* ne)  // Computing the weighted sum for the neuron 'ne'
 {
@@ -163,6 +165,8 @@ double Neural::Network::der(Neural::Neuron* ne)  // Derivative for that sigma ac
 {
     return (Network::sig(ne)) * (1 - Network::sig(ne));
 }
+
+
 
 void Neural::Network::recount_mistake(Neural::Neuron* &ne)  // Recounting mistake for the neuron 'ne'
 {
@@ -194,18 +198,51 @@ void Neural::Network::educate(string filename, bool show_process, int rep)  // E
 
     for (int rp = 0; rp < rep; rp++) {  // Educating the network several (rep) times
         for (auto task = tasks.begin(); task != tasks.end(); task++) {  // Cycling through tasks
+            /* Sorting input and output data */
             stringstream vars(*task);  // Input and output variables are all in one line. Input variables are the first template[0] ones, and output = the rest (actually, it is template[-1])
-            vector<int> inp;  // Input values
-            vector<int> out;  // Desirable output values
+            vector<double> inp;  // Input values
+            vector<double> out;  // Desirable output values
             int tmp;
             for (int i = 0; i < Network::tplate[0]; i++) {  // Adding input variables
                 vars >> tmp;
-                inp.push_back(tmp);
+                inp.push_back(Network::toRange(tmp));
             }
             for (int i = 0; i < Network::tplate[Network::tplate.size() - 1]; i++) {
                 vars >> tmp;
-                out.push_back(tmp);
+                out.push_back(Network::toRange(tmp));
             }
+
+            /* Changing start values */
+            for (int pos = 0; pos < Network::tplate[0]; pos++) {
+                Network::neurons[0][pos]->value = inp[pos];
+            }
+
+            /* Counting values */
+            for (int comp = 1; comp < Network::tplate.size(); comp++) {
+                for (int pos = 0; pos < Network::tplate[comp]; pos++) {
+                    Network::neurons[comp][pos]->value = Network::sig(Network::neurons[comp][pos]);
+                }
+            }
+
+            /* Counting mistakes for the last neurons */
+            for (int pos = 0; pos < Network::tplate[Network::tplate.size() - 1]; pos++) {
+                Network::neurons[Network::tplate.size() - 1][pos]->mistake = out[pos] - Network::neurons[Network::tplate.size() - 1][pos]->value;
+            }
+
+            /* Recounting mistakes */
+            for (int comp = Network::tplate.size() - 2; comp >= 0; comp--) {
+                for (int pos = 0; pos < Network::tplate[comp]; pos++) {
+                    Network::recount_mistake(Network::neurons[comp][pos]);
+                }
+            }
+
+            /* Recounting edges */
+            for (int comp = 1; comp < Network::tplate.size(); comp++) {
+                for (int pos = 0; pos < Network::tplate[comp]; pos++) {
+                    Network::recount_edges(Network::neurons[comp][pos]);
+                }
+            }
+
         }
     }
 
@@ -216,14 +253,14 @@ vector<double> Neural::Network::check(string inp_)
 
 
 
-void Neural::Network::create_synapse(int comp, int from, int to, float weight)
+void Neural::Network::create_synapse(int comp, int from, int to, double weight)
 {
     Network::neurons.at(comp).at(from)->outc.push_back(to);     // Adding output synapse to 'from' neuron
     Network::neurons.at(comp + 1).at(to)->inc.push_back(from);  // And input synapse to 'to' neuron
     Network::matrix.at(comp).at(from).at(to) = weight;  // Creating the weight of the synapse between these neurons. It should be random in range from -0.99 to +0.99
 }
 
-float Neural::Network::get_weight(int comp, int from, int to)
+double Neural::Network::get_weight(int comp, int from, int to)
 {
     return Network::matrix.at(comp).at(from).at(to);
 }

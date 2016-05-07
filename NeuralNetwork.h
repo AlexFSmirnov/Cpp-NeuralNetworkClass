@@ -15,7 +15,7 @@ namespace Neural
             virtual ~Neuron();
 
             int comp, pos;
-            float value, mistake;
+            double value, mistake;
             std::vector<int> inc;
             std::vector<int> outc;
 
@@ -31,13 +31,13 @@ namespace Neural
     {
         public:
             /* Construactor and destructor */
-            Network(std::string tplate_="0", int syn_prc=100, int nmin=0, int nmax=0, float co=0.7);
+            Network(std::string tplate_="0", int syn_prc=100, int nmin=0, int nmax=1, double co=0.7);
             Network();
             virtual ~Network();
 
             /* Main methods */
-            double toRange(float n);
-            double fromRange(float n);
+            double toRange(double n);
+            double fromRange(double n);
 
             double sum(Neuron* ne);
             double sig(Neuron* ne);
@@ -50,8 +50,8 @@ namespace Neural
             std::vector<double> check(std::string inp_);
 
             /* Misc */
-            void create_synapse(int comp, int from, int to, float weight);
-            float get_weight(int comp, int from, int to);
+            void create_synapse(int comp, int from, int to, double weight);
+            double get_weight(int comp, int from, int to);
             Neuron* get_neuron(int comp, int pos);
             void save(std::string filename);
             void load(std::string filename);
@@ -60,12 +60,12 @@ namespace Neural
 
         protected:
         private:
-            typedef std::vector<std::vector<std::vector<int>>> w_matrix;
+            typedef std::vector<std::vector<std::vector<double>>> w_matrix;
             typedef std::vector<std::vector<Neuron*>> n_matrix;
 
             std::vector<int> tplate;
             int syn_prc, nmin, nmax;
-            float co;
+            double co;
             w_matrix matrix;
             n_matrix neurons;
     };
