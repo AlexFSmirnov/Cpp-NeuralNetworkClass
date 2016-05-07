@@ -164,16 +164,24 @@ double Neural::Network::der(Neural::Neuron* ne)  // Derivative for that sigma ac
     return (Network::sig(ne)) * (1 - Network::sig(ne));
 }
 
-void Neural::Network::recount_mistake(Neural::Neuron* &ne)
+void Neural::Network::recount_mistake(Neural::Neuron* &ne)  // Recounting mistake for the neuron 'ne'
+{
+    double new_mist = 0;
+    for (auto pos = ne->outc.begin(); pos != ne->outc.end(); pos++) {
+        new_mist += Network::neurons[ne->comp + 1][*pos]->mistake * Network::matrix[ne->comp][ne->pos][*pos];
+    }
+    ne->mistake = new_mist;
+}
+void Neural::Network::recount_edges(Neural::Neuron* ne)  // Recounting all incoming edges for the neuron 'ne'
+{
+    for (auto pos = ne->inc.begin(); pos != ne->inc.end(); pos++) {
+        Network::matrix[ne->comp - 1][*pos][ne->pos] += Network::co * ne->mistake * Network::der(ne) * Network::neurons[ne->comp - 1][*pos]->value;
+    }
+}
+
+void Neural::Network::educate(string filename, bool show_process, int rep)  // Educating the network
 {
 
-}
-void Neural::Network::recount_edges(Neural::Neuron* ne)
-{
-}
-
-void Neural::Network::educate(string filename, bool show_process, int rep)
-{
 }
 vector<double> Neural::Network::check(string inp_)
 {
