@@ -181,6 +181,33 @@ void Neural::Network::recount_edges(Neural::Neuron* ne)  // Recounting all incom
 
 void Neural::Network::educate(string filename, bool show_process, int rep)  // Educating the network
 {
+    // Getting tasks from file
+    ifstream fin;
+    fin.open(filename);
+    vector<string> tasks;
+    string tmp_task;
+    while (!fin.eof()) {
+        getline(fin, tmp_task);
+        tasks.push_back(tmp_task);
+    }
+    fin.close();
+
+    for (int rp = 0; rp < rep; rp++) {  // Educating the network several (rep) times
+        for (auto task = tasks.begin(); task != tasks.end(); task++) {  // Cycling through tasks
+            stringstream vars(*task);  // Input and output variables are all in one line. Input variables are the first template[0] ones, and output = the rest (actually, it is template[-1])
+            vector<int> inp;  // Input values
+            vector<int> out;  // Desirable output values
+            int tmp;
+            for (int i = 0; i < Network::tplate[0]; i++) {  // Adding input variables
+                vars >> tmp;
+                inp.push_back(tmp);
+            }
+            for (int i = 0; i < Network::tplate[Network::tplate.size() - 1]; i++) {
+                vars >> tmp;
+                out.push_back(tmp);
+            }
+        }
+    }
 
 }
 vector<double> Neural::Network::check(string inp_)

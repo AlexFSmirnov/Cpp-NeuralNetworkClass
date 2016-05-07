@@ -21,9 +21,39 @@ ostream& operator<<(ostream& os, Neural::Neuron *n) {
     return os;
 }
 
+template <typename T>
+ostream& operator<<(ostream& os, const vector<T> &vec) {
+    for (auto i = vec.begin(); i != vec.end(); i++) {
+        os << *i << " ";
+    }
+    return os;
+}
+
 
 int main(int argc, char *argv[]) {
-    Neural::Network* nw = new Neural::Network("1 10 10 1", 10);
+    Neural::Network* nw = new Neural::Network("3 10 10 4", 10);
+
+
+    nw->educate("input.txt");
+
+
+
+
+    /*
+    fstream fin;
+    fin.open("input.txt");
+    vector<int> a;
+    //stringstream ss;
+    int line;
+    while (!fin.eof()) {
+        fin >> line;
+        cout << line << endl;
+        a.push_back(line);
+    }
+    cout << a;*/
+
+
+
 
     int comp = 0, pos = 0;
     while (comp != -1) {
