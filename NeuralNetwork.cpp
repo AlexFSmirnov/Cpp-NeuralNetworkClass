@@ -36,9 +36,7 @@ string Neural::Neuron::neuron_to_string()
     fout << Neuron::value << " " << Neuron::comp << " " << Neuron::pos << " " << Neuron::mistake << " ";
     fout << Neuron::inc.size() << " " << Neuron::outc.size() << " ";
     for (auto i = (Neuron::inc).begin(); i != (Neuron::inc).end(); ++i) fout << *i << " ";
-    fout << "";
     for (auto i = (Neuron::outc).begin(); i != (Neuron::outc).end(); ++i) fout << *i << " ";
-    fout << "\n";
     return fout.str();
 }
 
@@ -68,36 +66,15 @@ void Neural::Neuron::string_to_neuron(string line)
 /* Neural Network */
 Neural::Network::Network(string tplate_, int syn_prc, int nmin, int nmax, double co)
 {
+    Network::tplate_ = tplate_;
     Network::syn_prc = syn_prc;
     Network::nmin = nmin;
     Network::nmax = nmax;
     Network::co = co;
 
     srand(time(0));
-    stringstream ss(tplate_);  // Converting the template from string to vector
-    for (int x; ss >> x;) {
-        Network::tplate.push_back(x);
-    }
 
-    // Creating the matrix of weights of synapses between neurons (matrix[x][i][j] is the synapse from the neurons on pos 'i' in comp 'x' to the neuron on pos 'j' in comp 'x + 1'
-    // Actually, here we are only set the sizes of vectors.
-    Network::matrix.resize(tplate.size() - 1);
-    for (int comp = 0; comp < tplate.size() - 1; comp++) {
-        Network::matrix[comp].resize(tplate[comp]);
-        for (int from = 0; from < tplate[comp]; from++) {
-            Network::matrix[comp][from].resize(tplate[comp + 1]);
-        }
-    }
-
-    // Creating the neuron matrix.
-    Network::neurons.resize(tplate.size());
-    for (int comp = 0; comp < tplate.size(); comp++) {
-        Network::neurons[comp].resize(tplate[comp]);
-        for (int pos = 0; pos < tplate[comp]; pos++) {
-            Neural::Neuron* tmp = new Neural::Neuron(comp, pos);
-            Network::neurons[comp][pos] = tmp;
-        }
-    }
+    Network::init();  // Resizing network's matrixes, converting template
 
     // Adding incoming neurons
     for (int comp = 0; comp < tplate.size() - 1; comp++) {  // Cycling through components. We don't need the last one, because there are no outputs from the last neurons.
@@ -124,8 +101,9 @@ Neural::Network::Network(string tplate_, int syn_prc, int nmin, int nmax, double
     }
 }
 
-Neural::Network::Network()   // Not filling anything, because we are going to load the network from file, porbably
-{
+Neural::Network::Network(string filename, bool load) {
+    Network::tplate_ = "";
+    Network::load(filename);
 }
 
 Neural::Network::~Network()  // Destructor
@@ -135,7 +113,33 @@ Neural::Network::~Network()  // Destructor
             delete Network::neurons[comp][pos];
         }
     }
-    //cerr << "Deleted network!" << endl;
+}
+
+void Neural::Network::init()
+{
+    stringstream ss(Network::tplate_);  // Converting the template from string to vector
+    for (int x; ss >> x;) {
+        Network::tplate.push_back(x);
+    }
+    // Creating the matrix of weights of synapses between neurons (matrix[x][i][j] is the synapse from the neurons on pos 'i' in comp 'x' to the neuron on pos 'j' in comp 'x + 1'
+    // Actually, here we are only set the sizes of vectors.
+    Network::matrix.resize(Network::tplate.size() - 1);
+    for (int comp = 0; comp < Network::tplate.size() - 1; comp++) {
+        Network::matrix[comp].resize(Network::tplate[comp]);
+        for (int from = 0; from < Network::tplate[comp]; from++) {
+            Network::matrix[comp][from].resize(Network::tplate[comp + 1]);
+        }
+    }
+
+    // Creating the neuron matrix.
+    Network::neurons.resize(Network::tplate.size());
+    for (int comp = 0; comp < Network::tplate.size(); comp++) {
+        Network::neurons[comp].resize(Network::tplate[comp]);
+        for (int pos = 0; pos < Network::tplate[comp]; pos++) {
+            Neural::Neuron* tmp = new Neural::Neuron(comp, pos);
+            Network::neurons[comp][pos] = tmp;
+        }
+    }
 }
 
 double Neural::Network::toRange(double n)  // This function puts 'n' to range from 0 to 1, so it can be used as an input for the network
@@ -317,9 +321,51 @@ Neural::Neuron* Neural::Network::get_neuron(int comp, int pos)
     return Network::neurons[comp][pos];
 }
 
-void save(string filename)
+void Neural::Network::save(string filename)
 {
+    ofstream fout(filename, ios::out);
+    fout << Network::tplate_ << "\n";
+    fout << Network::syn_prc << " " << Network::nmin << " " << Network::nmax << " " << Network::co << "\n";
+    for (int comp = 0; comp < Network::tplate.size() - 1; comp++) {  // Printing the matrix of weights
+        for (int from = 0; from < Network::tplate[comp]; from++) {
+            for (int to = 0; to < Network::tplate[comp + 1]; to++) {
+                fout << Network::matrix[comp][from][to] << " ";
+            }
+        }
+        fout << "\n";
+    }
+    for (int comp = 0; comp < Network::tplate.size(); comp++) {  // Printing the matrix of neurons
+        for (int pos = 0; pos < Network::tplate[comp]; pos++) {
+            fout << Network::get_neuron(comp, pos)->neuron_to_string() << "\n";
+        }
+    }
+    clog << "Saved to " + filename << "\n";
 }
-void load(string filename)
+void Neural::Network::load(string filename)
 {
+    ifstream fin(filename, ios::in);
+    getline(fin, Network::tplate_);
+    fin >> Network::syn_prc;
+    fin >> Network::nmin;
+    fin >> Network::nmax;
+    fin >> Network::co;
+    Network::init();
+    for (int comp = 0; comp < Network::tplate.size() - 1; comp++) {  // Getting the matrix of weights
+        for (int from = 0; from < Network::tplate[comp]; from++) {
+            for (int to = 0; to < Network::tplate[comp + 1]; to++) {
+                fin >> Network::matrix[comp][from][to];
+            }
+        }
+    }
+
+    string tmp_string;
+    getline(fin, tmp_string);  // Duct tape. After getting the matrix we are still staying on the line, where weights are defined. So we need to go one line lower.
+    for (int comp = 0; comp < Network::tplate.size(); comp++) {  // Getting the matrix of neurons
+        for (int pos = 0; pos < Network::tplate[comp]; pos++) {
+            getline(fin, tmp_string);
+            Neural::Neuron* tmp_neuron = new Neural::Neuron(tmp_string);
+            Network::neurons[comp][pos] = tmp_neuron;
+        }
+    }
+    clog << "Loaded from " + filename << "\n";
 }

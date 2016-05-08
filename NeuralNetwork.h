@@ -32,8 +32,10 @@ namespace Neural
         public:
             /* Construactor and destructor */
             Network(std::string tplate_="0", int syn_prc=100, int nmin=0, int nmax=1, double co=0.7);
-            Network();
+            Network(std::string filename, bool load);
             virtual ~Network();
+
+            void init();
 
             /* Main methods */
             double toRange(double n);
@@ -63,6 +65,7 @@ namespace Neural
             typedef std::vector<std::vector<std::vector<double>>> w_matrix;
             typedef std::vector<std::vector<Neuron*>> n_matrix;
 
+            std::string tplate_;
             std::vector<int> tplate;
             int syn_prc, nmin, nmax;
             double co;
