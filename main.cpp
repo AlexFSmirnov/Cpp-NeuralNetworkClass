@@ -31,11 +31,17 @@ ostream& operator<<(ostream& os, const vector<T> &vec) {
 
 
 int main(int argc, char *argv[]) {
-    Neural::Network* nw = new Neural::Network("2 10 10 1", 80, 0, 1);
+    Neural::Network* nw = new Neural::Network("1 10 10 1", 80, 0, 3000);
 
-    nw->educate("input.txt", true, 400);
+    nw->educate("input.txt", true, 5000);
 
-    cout << nw->check("0 0") << endl << nw->check("0 1") << endl << nw->check("1 0") << endl << nw->check("1 1") << endl;
+    int a;
+    while (true) {
+        cin >> a;
+        cout << nw->check(to_string(a)) << endl;
+    }
+
+    //cout << nw->check("0 0") << endl << nw->check("0 1") << endl << nw->check("1 0") << endl << nw->check("1 1") << endl;
 
 
     delete nw;

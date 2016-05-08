@@ -196,8 +196,28 @@ void Neural::Network::educate(string filename, bool show_process, int rep)  // E
     }
     fin.close();
 
+
+    /* Used only if show_process == true */
+    int all_count = tasks.size() * rep;
+    int prc = 0;
+    int cur_cnt = 0;
+    int stime = time(0);
+
+
     for (int rp = 0; rp < rep; rp++) {  // Educating the network several (rep) times
         for (auto task = tasks.begin(); task != tasks.end(); task++) {  // Cycling through tasks
+            /* Displaying the job, that is already done, and the time that is left */
+            if (show_process) {
+                cur_cnt++;
+                if ((int)((cur_cnt * 1.0) / all_count * 100) > prc) {
+                    prc++;
+                    int s_all = (int)((100 - prc) * 1.0 * ((time(0) - stime) * 1.0 / prc));
+                    if (prc < 100)
+                        printf("% 3d%%, Time left: %02dh:%02dm:%02ds \n", prc, s_all / 3600, (s_all / 60) % 60, s_all % 60);
+                }
+
+            }
+
             /* Sorting input and output data */
             stringstream vars(*task);  // Input and output variables are all in one line. Input variables are the first template[0] ones, and output = the rest (actually, it is template[-1])
             vector<double> inp;  // Input values
@@ -245,6 +265,7 @@ void Neural::Network::educate(string filename, bool show_process, int rep)  // E
 
         }
     }
+    printf("Done! Time used: %02dh:%02dm:%02ds \n", (time(0) - stime) / 3600, ((time(0) - stime) / 60) % 60, (time(0) - stime) % 60);
 
 }
 vector<double> Neural::Network::check(string inp_)

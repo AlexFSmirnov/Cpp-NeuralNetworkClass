@@ -5,7 +5,7 @@
 
 1462475166 c:\users\asus-pc\cpp-neuralnetworkclass\net\neuralnetwork\neuralnetwork.h
 
-1462661116 source:c:\users\asus-pc\cpp-neuralnetworkclass\neuralnetwork.cpp
+1462726035 source:c:\users\asus-pc\cpp-neuralnetworkclass\neuralnetwork.cpp
 	<iostream>
 	<fstream>
 	<sstream>
@@ -19,7 +19,7 @@
 	<vector>
 	<string>
 
-1462661065 source:c:\users\asus-pc\cpp-neuralnetworkclass\main.cpp
+1462726210 source:c:\users\asus-pc\cpp-neuralnetworkclass\main.cpp
 	<iostream>
 	<fstream>
 	<vector>
