@@ -10,9 +10,8 @@ namespace Neural
     class Neuron
     {
         public:
-            Neuron(int comp_, int pos_);  // Creating with values
-            Neuron(std::string line);  // Reading from file
-            virtual ~Neuron();
+            Neuron(int comp_, int pos_);  // Created manually
+            Neuron(std::string line);  // Loaded from a string
 
             int comp, pos;
             double value, mistake;
@@ -31,8 +30,8 @@ namespace Neural
     {
         public:
             /* Construactor and destructor */
-            Network(std::string tplate_="0", int syn_prc=100, int nmin=0, int nmax=1, double co=0.7);
-            Network(std::string filename, bool load);
+            Network(std::string tplate_="0", int syn_prc=100, int nmin=0, int nmax=1, double co=0.7);  // Creating manually
+            Network(std::string filename, bool load);  // Loaded from file
             virtual ~Network();
 
             void init();

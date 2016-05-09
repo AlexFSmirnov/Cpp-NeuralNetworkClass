@@ -6,6 +6,7 @@
 #include <ctime>
 #include <math.h>
 #include "NeuralNetwork.h"
+
 using namespace std;
 
 
@@ -23,11 +24,6 @@ Neural::Neuron::Neuron(int comp_, int pos_)
 Neural::Neuron::Neuron(string line)
 {
     Neuron::string_to_neuron(line);
-}
-
-Neural::Neuron::~Neuron()
-{
-    //cerr << "Deleted neuron " + to_string(comp) + " " + to_string(pos) + "\n";
 }
 
 string Neural::Neuron::neuron_to_string()
@@ -74,7 +70,7 @@ Neural::Network::Network(string tplate_, int syn_prc, int nmin, int nmax, double
 
     srand(time(0));
 
-    Network::init();  // Resizing network's matrixes, converting template
+    Network::init();  // Resizing network's matrices, converting template
 
     // Adding incoming neurons
     for (int comp = 0; comp < tplate.size() - 1; comp++) {  // Cycling through components. We don't need the last one, because there are no outputs from the last neurons.
@@ -102,20 +98,19 @@ Neural::Network::Network(string tplate_, int syn_prc, int nmin, int nmax, double
 }
 
 Neural::Network::Network(string filename, bool load) {
-    Network::tplate_ = "";
     Network::load(filename);
 }
 
 Neural::Network::~Network()  // Destructor
 {
-    for (int comp = 0; comp < Network::tplate.size(); comp++) {
+    for (int comp = 0; comp < Network::tplate.size(); comp++) {  // Deleting all neurons
         for (int pos = 0; pos < Network::tplate[comp]; pos++) {
             delete Network::neurons[comp][pos];
         }
     }
 }
 
-void Neural::Network::init()
+void Neural::Network::init()  // Resizing matrices and converting template
 {
     stringstream ss(Network::tplate_);  // Converting the template from string to vector
     for (int x; ss >> x;) {
@@ -270,8 +265,8 @@ void Neural::Network::educate(string filename, bool show_process, int rep)  // E
         }
     }
     printf("Done! Time used: %02dh:%02dm:%02ds \n", (time(0) - stime) / 3600, ((time(0) - stime) / 60) % 60, (time(0) - stime) % 60);
-
 }
+
 vector<double> Neural::Network::check(string inp_)
 {
     /* Converting input variables from string to vector */
@@ -301,8 +296,6 @@ vector<double> Neural::Network::check(string inp_)
     return out;
 
 }
-
-
 
 void Neural::Network::create_synapse(int comp, int from, int to, double weight)
 {
