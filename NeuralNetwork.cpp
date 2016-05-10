@@ -113,6 +113,7 @@ Neural::Network::~Network()  // Destructor
 void Neural::Network::init()  // Resizing matrices and converting template
 {
     stringstream ss(Network::tplate_);  // Converting the template from string to vector
+    Network::tplate.clear();  // Clearing the template, because some trash from the last network might be here
     for (int x; ss >> x;) {
         Network::tplate.push_back(x);
     }
@@ -287,7 +288,6 @@ vector<double> Neural::Network::check(string inp_)
             Network::neurons[comp][pos]->value = Network::sig(Network::neurons[comp][pos]);
         }
     }
-
     /* Returning output */
     vector<double> out;
     for (int pos = 0; pos < Network::tplate[Network::tplate.size() - 1]; pos++) {
@@ -332,6 +332,7 @@ void Neural::Network::save(string filename)
             fout << Network::get_neuron(comp, pos)->neuron_to_string() << "\n";
         }
     }
+    fout.close();
     clog << "Saved to " + filename << "\n";
 }
 void Neural::Network::load(string filename)
@@ -360,5 +361,6 @@ void Neural::Network::load(string filename)
             Network::neurons[comp][pos] = tmp_neuron;
         }
     }
+    fin.close();
     clog << "Loaded from " + filename << "\n";
 }
