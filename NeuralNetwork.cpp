@@ -210,7 +210,7 @@ void Neural::Network::educate(string filename, bool show_process, int rep)  // E
             if (show_process) {
                 cur_cnt++;
                 if ((int)((cur_cnt * 1.0) / all_count * 100) > prc) {
-                    prc++;
+                    prc = (int)((cur_cnt * 1.0) / all_count * 100);
                     int s_all = (int)((100 - prc) * 1.0 * ((time(0) - stime) * 1.0 / prc));
                     if (prc < 100)
                         printf("% 3d%%, Time left: %02dh:%02dm:%02ds \n", prc, s_all / 3600, (s_all / 60) % 60, s_all % 60);
