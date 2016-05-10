@@ -54,7 +54,6 @@ void Neural::Neuron::string_to_neuron(string line)
         ss >> tmp;
         Neuron::outc.push_back(tmp);
     }
-
 }
 
 
@@ -215,7 +214,6 @@ void Neural::Network::educate(string filename, bool show_process, int rep)  // E
                     if (prc < 100)
                         printf("% 3d%%, Time left: %02dh:%02dm:%02ds \n", prc, s_all / 3600, (s_all / 60) % 60, s_all % 60);
                 }
-
             }
 
             /* Sorting input and output data */
@@ -262,7 +260,6 @@ void Neural::Network::educate(string filename, bool show_process, int rep)  // E
                     Network::recount_edges(Network::neurons[comp][pos]);
                 }
             }
-
         }
     }
     printf("Done! Time used: %02dh:%02dm:%02ds \n", (time(0) - stime) / 3600, ((time(0) - stime) / 60) % 60, (time(0) - stime) % 60);
