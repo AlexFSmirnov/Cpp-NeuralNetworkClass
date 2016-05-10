@@ -288,6 +288,7 @@ vector<double> Neural::Network::check(string inp_)
             Network::neurons[comp][pos]->value = Network::sig(Network::neurons[comp][pos]);
         }
     }
+
     /* Returning output */
     vector<double> out;
     for (int pos = 0; pos < Network::tplate[Network::tplate.size() - 1]; pos++) {
