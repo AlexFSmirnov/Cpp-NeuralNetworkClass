@@ -40,7 +40,7 @@ using namespace std;
 
 
 int main(int argc, char *argv[]) {
-    string help_message = " Help.\n This is a file, using which you can educate, save, load and use\n a neural network right from a console.\n\n In order to do this run this file using these arguments:\n GENERAL---------------------------------------------------\n -h           Shows this message\n\n NETWORK-CREATION------------------------------------------\n -t \"string\"  The template for the network\n -sp \"int\"    Synapse percent               (default = 100)\n -nn \"int\"    Minimal input/output value    (default =   0)\n -nx \"int\"    Maximal input/output value    (default =   1)\n -co \"float\"  Learning coefficient          (default = 0.7)\n\n EDUCATION-------------------------------------------------\n -e \"file\"    File with tasks for education\n -sh \"bool\"   Show process                (default = false)\n -r \"int\"     Repetitions                 (default =     1)\n\n SOLVING---------------------------------------------------\n -i \"file\"    Input file with task(s) to solve\n -ss \"bool\"   Show process                (default =  true)\n -o \"file\"    Output file for answer(s)\n\n SAVING/LOADING--------------------------------------------\n -s \"file\"    Will save the network to file after education\n -l \"file\"    Will load the network from the file\n";
+    string help_message = " Help.\n This is a file, using which you can educate, save, load and use\n a neural network right from a console.\n\n In order to do this run this file using these arguments:\n GENERAL---------------------------------------------------\n -h           Shows this message\n\n NETWORK-CREATION------------------------------------------\n -t \"string\"  The template for the network\n -sp \"int\"    Synapse percent               (default = 100)\n -nn \"int\"    Minimal input/output value    (default =   0)\n -nx \"int\"    Maximal input/output value    (default =   1)\n -co \"float\"  Learning coefficient          (default = 0.7)\n\n EDUCATION-------------------------------------------------\n -e \"file\"    File with tasks for education\n -sh \"bool\"   Show process                (default =  true)\n -r \"int\"     Repetitions                 (default =     1)\n\n SOLVING---------------------------------------------------\n -i \"file\"    Input file with task(s) to solve\n -ss \"bool\"   Show process                (default = false)\n -o \"file\"    Output file for answer(s)\n\n SAVING/LOADING--------------------------------------------\n -s \"file\"    Will save the network to file after education\n -l \"file\"    Will load the network from the file\n";
     string tplate = "0 0";
     int syn_prc = 100;
     int nmin = 0;
@@ -136,6 +136,8 @@ int main(int argc, char *argv[]) {
         }
         if (out_file != "none")
             cout << "Finished!\n";
+            fout.close();
+        fin.close();
     }
     delete nw;
 
